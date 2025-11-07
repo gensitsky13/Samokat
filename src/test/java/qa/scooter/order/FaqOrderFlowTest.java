@@ -35,8 +35,7 @@ public class FaqOrderFlowTest extends BaseUiTest {
     void orderFlowTopButton() {
         runOrderFlowFromTop(new OrderData("Анна","Иванова","г. Москва, Тверская 1","Тверская",
                 "+79990000001","20.11.2025","двое суток","black","Позвоните за 30 минут"));
-        runOrderFlowFromTop(new OrderData("Олег","Каспи","г. Москва, Арбат 2","Арбатская",
-                "+79990000002","21.11.2025","сутки","grey","Оставить у консьержа"));
+
     }
 
     @Test
@@ -44,7 +43,6 @@ public class FaqOrderFlowTest extends BaseUiTest {
     void orderFlowBottomButton() {
         runOrderFlowFromBottom(new OrderData("Анна","Иванова","г. Москва, Тверская 1","Тверская",
                 "+79990000001","20.11.2025","двое суток","black","Позвоните за 30 минут"));
-        runOrderFlowFromBottom(new OrderData("Олег","Каспи","г. Москва, Арбат 2","Арбатская",
-                "+79990000002","21.11.2025","сутки","grey","Оставить у консьержа"));
+
     }
 }

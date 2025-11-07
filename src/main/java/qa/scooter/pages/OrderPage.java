@@ -27,7 +27,7 @@ public class OrderPage {
     private final By colorBlack = By.id("black");
     private final By colorGrey  = By.id("grey");
     private final By comment    = By.xpath("//input[@placeholder='Комментарий для курьера']");
-    private final By orderBtn   = By.xpath("//button[contains(text(),'Заказать') and not(@disabled)]");
+    private final By orderBtn   = By.cssSelector(".Button_Middle__1CSJM:nth-child(2)");
     private final By confirmYes = By.xpath("//button[text()='Да']");
     private final By successModal = By.xpath("//div[contains(@class,'Order_Modal')]");
     private final By successText  = By.xpath("//*[contains(text(),'Заказ оформлен')]");
@@ -66,7 +66,14 @@ public class OrderPage {
     }
 
     public void submitOrder() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         driver.findElement(orderBtn).click();
+
         wait.until(ExpectedConditions.elementToBeClickable(confirmYes)).click();
     }
 
