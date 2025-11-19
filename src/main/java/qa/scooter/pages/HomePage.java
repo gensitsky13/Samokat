@@ -11,8 +11,11 @@ public class HomePage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
+    // Кнопки "Заказать" сверху и снизу
     private final By topOrderBtn    = By.xpath("(//button[contains(.,'Заказать')])[1]");
     private final By bottomOrderBtn = By.xpath("(//button[contains(.,'Заказать')])[last()]");
+
+    // Куки
     private final By cookieAccept   = By.id("rcc-confirm-button");
 
     public HomePage(WebDriver driver) {
@@ -20,46 +23,35 @@ public class HomePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    /** Открыть главную страницу */
     public HomePage open(String baseUrl) {
         driver.get(baseUrl);
         return this;
     }
 
+    /** Принять куки, если баннер появился */
     public void acceptCookiesIfPresent() {
         try {
             wait.withTimeout(Duration.ofSeconds(5))
                     .until(ExpectedConditions.elementToBeClickable(cookieAccept))
                     .click();
-        } catch (Exception ignored) {}
+        } catch (TimeoutException ignored) {
+            // баннер не появился — ничего не делаем
+        }
     }
 
-    public void clickTopOrder() {
-        wait.until(ExpectedConditions.elementToBeClickable(topOrderBtn)).click();
+    /** Клик по верхней кнопке "Заказать" */
+    public void clickTopOrderButton() {
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(topOrderBtn));
+        // Скролл, чтобы в Chrome тест проверял реальное поведение (и падал при баге)
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        button.click();
     }
 
-    public void clickBottomOrder() {
-        WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(bottomOrderBtn));
-        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);"); // прокрутка в самый низ
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
-        wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
-    }
-
-    // ===== FAQ =====
-    public WebElement getFaqQuestionByIndex(int index) {
-        By q = By.id("accordion__heading-" + index);
-        WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(q));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", el);
-        return el;
-    }
-
-    public WebElement getFaqAnswerByIndex(int index) {
-        By a = By.id("accordion__panel-" + index);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(a));
-    }
-
-    public void toggleFaqByIndex(int index) {
-        WebElement question = wait.until(ExpectedConditions.elementToBeClickable(By.id("accordion__heading-" + index)));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", question);
-        question.click();
+    /** Клик по нижней кнопке "Заказать" */
+    public void clickBottomOrderButton() {
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(bottomOrderBtn));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        button.click();
     }
 }

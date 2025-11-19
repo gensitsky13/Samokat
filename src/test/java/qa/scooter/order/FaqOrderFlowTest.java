@@ -1,48 +1,81 @@
 package qa.scooter.order;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import qa.scooter.BaseUiTest;
 import qa.scooter.model.OrderData;
+import qa.scooter.pages.HomePage;
 import qa.scooter.pages.OrderPage;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FaqOrderFlowTest extends BaseUiTest {
 
-    private void runOrderFlowFromTop(OrderData d) {
-        home.clickTopOrder();
-        OrderPage order = new OrderPage(driver)
-                .fillCustomerInfo(d)
-                .fillRentalInfo(d);
-        order.submitOrder();
-        assertTrue(order.isSuccessModalVisible(),
-                "Ожидали модалку об успешном создании заказа — возможно, воспроизвёлся баг в Chrome.");
+    // 👉 2 набора данных для заказа
+    static Stream<OrderData> orderData() {
+        return Stream.of(
+                new OrderData(
+                        "Иван",                 // firstName
+                        "Иванов",               // lastName
+                        "Москва, Тверская 1",   // address
+                        "Черкизовская",         // metro
+                        "+79990000001",         // phone
+                        "10.12.2025",           // date
+                        "сутки",                // duration
+                        "Позвонить заранее",    // comment
+                        "BLACK"                 // color
+                ),
+                new OrderData(
+                        "Ольга",                // firstName
+                        "Иванова",              // lastName
+                        "Москва, Тверская 10",  // address
+                        "Нагорная",             // metro
+                        "+79990000009",         // phone
+                        "18.12.2026",           // date
+                        "сутки",                // duration
+                        "Позвонить заранее",    // comment
+                        "BLACK"                 // color
+                )
+        );
     }
 
-    private void runOrderFlowFromBottom(OrderData d) {
-        home.clickBottomOrder();
-        OrderPage order = new OrderPage(driver)
-                .fillCustomerInfo(d)
-                .fillRentalInfo(d);
-        order.submitOrder();
-        assertTrue(order.isSuccessModalVisible(),
-                "Ожидали модалку об успешном создании заказа — возможно, воспроизвёлся баг в Chrome.");
-    }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("orderData")
     @DisplayName("Order: позитивный сценарий — вход сверху (2 набора данных)")
-    void orderFlowTopButton() {
-        runOrderFlowFromTop(new OrderData("Анна","Иванова","г. Москва, Тверская 1","Тверская",
-                "+79990000001","20.11.2025","двое суток","black","Позвоните за 30 минут"));
+    void orderFlowTopButton(OrderData data) {
+        HomePage home = new HomePage(driver)
+                .open(BASE_URL);
+        home.acceptCookiesIfPresent();
 
+        // ❗ Тест идёт через ВЕРХНЮЮ кнопку "Заказать"
+        home.clickTopOrderButton();
+
+        OrderPage orderPage = new OrderPage(driver);
+        orderPage.makeOrder(data);
+
+        assertTrue(orderPage.isOrderSuccess(),
+                "Модальное окно с подтверждением заказа не появилось (верхняя кнопка)");
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("orderData")
     @DisplayName("Order: позитивный сценарий — вход снизу (2 набора данных)")
-    void orderFlowBottomButton() {
-        runOrderFlowFromBottom(new OrderData("Анна","Иванова","г. Москва, Тверская 1","Тверская",
-                "+79990000001","20.11.2025","двое суток","black","Позвоните за 30 минут"));
+    void orderFlowBottomButton(OrderData data) {
+        HomePage home = new HomePage(driver)
+                .open(BASE_URL);
+        home.acceptCookiesIfPresent();
 
+        // Вход через НИЖНЮЮ кнопку "Заказать"
+        home.clickBottomOrderButton();
+
+        OrderPage orderPage = new OrderPage(driver);
+        orderPage.makeOrder(data);
+
+        assertTrue(orderPage.isOrderSuccess(),
+                "Модальное окно с подтверждением заказа не появилось (нижняя кнопка)");
     }
 }
