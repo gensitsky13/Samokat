@@ -11,11 +11,10 @@ public class HomePage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Кнопки "Заказать" сверху и снизу
-    private final By topOrderBtn    = By.xpath("(//button[contains(.,'Заказать')])[1]");
-    private final By bottomOrderBtn = By.xpath("(//button[contains(.,'Заказать')])[last()]");
-
-    // Куки
+    // Верхняя кнопка "Заказать"
+    private final By topOrderBtn    = By.xpath("(//button[text()='Заказать'])[1]");
+    // Нижняя кнопка "Заказать"
+    private final By bottomOrderBtn = By.xpath("(//button[text()='Заказать'])[2]");
     private final By cookieAccept   = By.id("rcc-confirm-button");
 
     public HomePage(WebDriver driver) {
@@ -23,35 +22,36 @@ public class HomePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    /** Открыть главную страницу */
     public HomePage open(String baseUrl) {
         driver.get(baseUrl);
         return this;
     }
 
-    /** Принять куки, если баннер появился */
     public void acceptCookiesIfPresent() {
         try {
             wait.withTimeout(Duration.ofSeconds(5))
                     .until(ExpectedConditions.elementToBeClickable(cookieAccept))
                     .click();
         } catch (TimeoutException ignored) {
-            // баннер не появился — ничего не делаем
+            // куки просто не показались — ок
         }
     }
 
-    /** Клик по верхней кнопке "Заказать" */
+    // Клик по ВЕРХНЕЙ кнопке "Заказать"
     public void clickTopOrderButton() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(topOrderBtn));
-        // Скролл, чтобы в Chrome тест проверял реальное поведение (и падал при баге)
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        WebElement button = wait.until(ExpectedConditions
+                .elementToBeClickable(topOrderBtn));
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", button);
         button.click();
     }
 
-    /** Клик по нижней кнопке "Заказать" */
+    // Клик по НИЖНЕЙ кнопке "Заказать"
     public void clickBottomOrderButton() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(bottomOrderBtn));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        WebElement button = wait.until(ExpectedConditions
+                .elementToBeClickable(bottomOrderBtn));
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", button);
         button.click();
     }
 }

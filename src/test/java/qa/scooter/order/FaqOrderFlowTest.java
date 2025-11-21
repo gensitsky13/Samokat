@@ -17,30 +17,31 @@ public class FaqOrderFlowTest extends BaseUiTest {
     // 👉 2 набора данных для заказа
     static Stream<OrderData> orderData() {
         return Stream.of(
-                new OrderData(
-                        "Иван",                 // firstName
-                        "Иванов",               // lastName
-                        "Москва, Тверская 1",   // address
-                        "Черкизовская",         // metro
-                        "+79990000001",         // phone
-                        "10.12.2025",           // date
-                        "сутки",                // duration
-                        "Позвонить заранее",    // comment
-                        "BLACK"                 // color
-                ),
-                new OrderData(
-                        "Ольга",                // firstName
-                        "Иванова",              // lastName
-                        "Москва, Тверская 10",  // address
-                        "Нагорная",             // metro
-                        "+79990000009",         // phone
-                        "18.12.2026",           // date
-                        "сутки",                // duration
-                        "Позвонить заранее",    // comment
-                        "BLACK"                 // color
-                )
-        );
-    }
+                    new OrderData(
+                            "Иван",                 // firstName
+                            "Иванов",               // lastName
+                            "Москва, Тверская 1",   // address
+                            "Черкизовская",         // metro
+                            "+79990000001",         // phone
+                            "10.12.2025",           // date
+                            "сутки",                // duration
+                            "BLACK",                // color  ✔️ сначала цвет
+                            "Позвонить заранее"     // comment ✔️ потом комментарий
+                    ),
+                    new OrderData(
+                            "Ольга",                // firstName
+                            "Иванова",              // lastName
+                            "Москва, Тверская 10",  // address
+                            "Нагорная",             // metro
+                            "+79990000009",         // phone
+                            "18.12.2026",           // date
+                            "сутки",                // duration
+                            "BLACK",                // color  ✔️
+                            "Позвонить заранее"     // comment ✔️
+                    )
+            );
+        }
+
 
 
     @ParameterizedTest

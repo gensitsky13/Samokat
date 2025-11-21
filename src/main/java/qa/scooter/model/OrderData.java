@@ -7,9 +7,9 @@ public class OrderData {
     private final String address;
     private final String metro;
     private final String phone;
-    private final String date;       // формат: dd.MM.yyyy
-    private final String duration;   // например: "сутки"
-    private final String color;      // "BLACK" / "GREY" / "BLACK_GREY"
+    private final String date;
+    private final String rentalPeriod;
+    private final String color;
     private final String comment;
 
     public OrderData(String firstName,
@@ -18,22 +18,20 @@ public class OrderData {
                      String metro,
                      String phone,
                      String date,
-                     String duration,
+                     String rentalPeriod,
                      String color,
                      String comment) {
-
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.metro = metro;
         this.phone = phone;
         this.date = date;
-        this.duration = duration;
+        this.rentalPeriod = rentalPeriod;
         this.color = color;
         this.comment = comment;
     }
 
-    // ГЕТТЕРЫ — именно то, чего не хватает
     public String getFirstName() {
         return firstName;
     }
@@ -58,8 +56,8 @@ public class OrderData {
         return date;
     }
 
-    public String getDuration() {
-        return duration;
+    public String getRentalPeriod() {
+        return rentalPeriod;
     }
 
     public String getColor() {
