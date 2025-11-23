@@ -15,8 +15,16 @@ public class DriverFactory {
         switch (browser) {
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
+
                 FirefoxOptions ff = new FirefoxOptions();
-                if (headless) ff.addArguments("-headless");
+
+
+                ff.setBinary("/Applications/Firefox.app/Contents/MacOS/firefox");
+
+                if (headless) {
+                    ff.addArguments("--headless");
+                }
+
                 return new FirefoxDriver(ff);
             case "chrome":
             default:

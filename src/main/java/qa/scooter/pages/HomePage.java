@@ -33,25 +33,41 @@ public class HomePage {
                     .until(ExpectedConditions.elementToBeClickable(cookieAccept))
                     .click();
         } catch (TimeoutException ignored) {
-            // куки просто не показались — ок
+            // куки не появились — ок
         }
     }
 
     // Клик по ВЕРХНЕЙ кнопке "Заказать"
     public void clickTopOrderButton() {
-        WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(topOrderBtn));
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView(true);", button);
-        button.click();
+        WebElement button = wait.until(
+                ExpectedConditions.elementToBeClickable(topOrderBtn)
+        );
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        // переносим кнопку НИЖЕ шапки
+        js.executeScript("arguments[0].scrollIntoView(false);", button);
+
+        try {
+            button.click();
+        } catch (ElementClickInterceptedException e) {
+            // если всё ещё что-то перекрывает — жмём через JS
+            js.executeScript("arguments[0].click();", button);
+        }
     }
 
     // Клик по НИЖНЕЙ кнопке "Заказать"
     public void clickBottomOrderButton() {
-        WebElement button = wait.until(ExpectedConditions
-                .elementToBeClickable(bottomOrderBtn));
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView(true);", button);
-        button.click();
+        WebElement button = wait.until(
+                ExpectedConditions.elementToBeClickable(bottomOrderBtn)
+        );
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(false);", button);
+
+        try {
+            button.click();
+        } catch (ElementClickInterceptedException e) {
+            js.executeScript("arguments[0].click();", button);
+        }
     }
 }
