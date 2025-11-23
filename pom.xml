@@ -1,36 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>selenium-junit5-demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>qa.scooter</groupId>
+    <artifactId>scooter-ui-tests</artifactId>
+    <version>1.0.0</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Обнови при желании на последние стабильные 4.x / 5.x -->
-        <selenium.version>4.23.0</selenium.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
-        <maven.surefire.version>3.2.5</maven.surefire.version>
+        <selenium.version>4.24.0</selenium.version>
+        <wdm.version>5.9.2</wdm.version>
+        <surefire.version>3.2.5</surefire.version>
     </properties>
 
     <dependencies>
-        <!-- Selenium 4 (включает клиент и менеджер драйверов) -->
+        <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        <!-- WebDriverManager -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${wdm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 (API + Engine); БЕЗ junit-jupiter-params -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
@@ -38,22 +56,28 @@
 
     <build>
         <plugins>
-            <!-- Компилятор под Java 11 -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
 
-            <!-- Запуск тестов JUnit 5 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <version>${surefire.version}</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <browser>${browser}</browser>
+                        <headless>${headless}</headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
